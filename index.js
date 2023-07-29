@@ -5,6 +5,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cron = require('node-cron');
+const morgan = require('morgan');
+const helmet = require('helmet');
+const cors = require('cors');
+const RateLimit = require('express-rate-limit');
+
+require('dotenv').config()
 
 const { resetKeypair } = require('./utils/keypair');
 
@@ -12,56 +18,31 @@ if (!fs.existsSync(path.join(__dirname, '.public', 'keys.json')) || !fs.existsSy
   resetKeypair();
   console.info('key-pair generated');
 }
-// reset keypair after some time
-// ┌───────────── second (0 - 59)
-// | ┌───────────── minute(0 - 59)
-// | │ ┌───────────── hour(0 - 23)
-// | │ │ ┌───────────── day of the month(1 - 31)
-// | │ │ │ ┌───────────── month(1 - 12)
-// | │ │ │ │ ┌───────────── day of the week(0 - 6)(Sunday to Saturday;
-// | │ │ │ │ │                                   7 is also Sunday on some systems)
-// | │ │ │ │ │
-// | │ │ │ │ │
-// * * * * * *
+
 const cronJob = cron.schedule("0 56 23 * * *", function() {
   resetKeypair();
   console.info('key-pair update job completed');
 });
 cronJob.start();
-// const multer = require('multer');
 
 const authRoutes = require('./routes/auth');
 const app = express();
 
-// const fileStorage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     cb(null, 'images');
-//   },
-//   filename: (req, file, cb) => {
-//     cb(null, new Date().toISOString() + '-' + file.originalname);
-//   }
-// });
-
-// const fileFilter = (req, file, cb) => {
-//   if (
-//     file.mimetype === 'image/jpg' ||
-//     file.mimetype === 'image/jpeg'
-//   ) {
-//     cb(null, true);
-//   } else {
-//     cb(null, false);
-//   }
-// };
-
 app.use(express.json()); // application/json
-// app.use(
-//   multer({
-//     fileFilter: fileFilter
-//   })
-//   .fields([{
-//     name: 'image',
-//   }]),
-// );
+
+app.use(helmet());
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+app.use(morgan("dev"));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(cors());
+const limiter = RateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 500,
+});
+// Apply rate limiter to all requests
+app.use(limiter);
+
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -87,10 +68,11 @@ const server = http.createServer(app);
 
 mongoose
   .connect(
-    process.env.DATABASE_URL, { useNewUrlParser: true }
+    process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(result => {
     console.log('Connected to Database!')
-    server.listen(80);
+    server.listen(process.env.API_PORT);
+    console.log('Server running on port '+process.env.API_PORT)
   })
   .catch(err => console.log(err));

@@ -1,8 +1,8 @@
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.wmtech.cc",
-  port: 465,
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT,
   secure: true,
   auth: {
     user: process.env.SMTP_USER,
@@ -11,9 +11,9 @@ const transporter = nodemailer.createTransport({
 });
 
 const defaultMailOptions = {
-  from: `WMTech <noreply.wmtech.cc>`,
-  replyTo: `info@wmtech.cc`,
-  subject: 'WMTech',
+  from: 'KnowByte <noreply@knowbyte.co>',
+  replyTo: 'info@knowbyte.co',
+  subject: 'KnowByte Registration Verification',
 };
 
 exports.sendVerificationEmail = async(firstName, email, token) => {

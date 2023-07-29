@@ -1,7 +1,7 @@
 const axios = require('axios');
 const { createRemoteJWKSet } = require('jose/jwks/remote');
 const { jwtVerify } = require('jose/jwt/verify');
-const BACKEND_URL = 'http://localhost:80';
+const BACKEND_URL = 'http://localhost:3000';
 const JWKS = createRemoteJWKSet(new URL(`${BACKEND_URL}/auth/publicKey`));
 
 exports.isAuth = async (req, res, next) => {
@@ -14,8 +14,8 @@ exports.isAuth = async (req, res, next) => {
     }
     const token = authHeader.split(' ')[1];
     const { payload } = await jwtVerify(token, JWKS, {
-      issuer: 'wmtech',
-      audience: 'auth.wmtech.cc'
+      issuer: 'KnowByte',
+      audience: 'knowbyte.co'
     });
 
     if (!payload) {
