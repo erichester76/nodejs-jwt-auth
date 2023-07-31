@@ -17,7 +17,7 @@ if (!fs.existsSync(path.join(__dirname, '.public', 'keys.json')) || !fs.existsSy
   resetKeypair();
   console.info('key-pair generated');
 }
-const cronJob = cron.schedule("0 56 23 * * *", function() {
+const cronJob = cron.schedule("0 59 23 * * *", function() {
   resetKeypair();
   console.info('key-pair update job completed');
 });
@@ -27,13 +27,13 @@ cronJob.start();
 const app = express();
 app.use(express.json());
 
-// helmet for some level of WAF
 app.use(helmet());
-const allowedOrigins = ['http://localhost:3000', 'https://dev.knowbyte.app'];
-const options: cors.CorsOptions = {
-  origin: allowedOrigins
-};
-app.use(cors(options));
+
+var corsOptions = {
+  origin: ['http://localhost:3000', 'https://dev.knowbyte.app'],
+}
+
+app.use(cors(corsOptions));
 
 // prevent fingerprinting
 app.disable('x-powered-by')
