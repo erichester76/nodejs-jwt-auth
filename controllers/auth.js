@@ -89,8 +89,8 @@ exports.handleSignIn = async (req, res, next) => {
     })
       .setProtectedHeader({ alg: 'EdDSA', kid: jwk.kid })
       .setIssuedAt()
-      .setIssuer('wmtech')
-      .setAudience('auth.wmtech.cc')
+      .setIssuer('KnowByte')
+      .setAudience('api.knowbyte.app')
       .setExpirationTime(accessTokenExpiry.getTime())
       .sign(privateKey);
     const refreshToken = crypto.randomBytes(128).toString('base64');

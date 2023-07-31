@@ -1,7 +1,7 @@
 const axios = require('axios');
 const { createRemoteJWKSet } = require('jose/jwks/remote');
 const { jwtVerify } = require('jose/jwt/verify');
-const BACKEND_URL = 'http://localhost:3000';
+const BACKEND_URL = 'https://api.knowbyte.app';
 const JWKS = createRemoteJWKSet(new URL(`${BACKEND_URL}/auth/publicKey`));
 
 exports.isAuth = async (req, res, next) => {

@@ -69,9 +69,6 @@ router.post('/sign_in_with_email_password', [
     .isLength({
       min: 5
     }),
-  body('token')
-    .trim()
-    .notEmpty()
 ], authController.signInWithEmailPassword, authController.handleSignIn);
 
 router.post("/sign_in_with_apple", [
