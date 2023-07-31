@@ -28,13 +28,15 @@ const app = express();
 app.use(express.json());
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+app.disable('x-powered-by')
 app.use(morgan("combined"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 const limiter = RateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
-  max: 500,
+  max: 50,
+  skipSuccessfulRequests: true,
 });
 // Apply rate limiter to all requests
 app.use(limiter);
