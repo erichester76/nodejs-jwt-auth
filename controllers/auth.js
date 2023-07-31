@@ -161,7 +161,7 @@ exports.signInWithEmailPassword = async (req, res, next) => {
     }
 
     if (!user.emailVerified) {
-      const error = new Error('Email not verified, please verify your email!');
+      const error = new Error('Email not verified, please verify your email! '.concat(user.emailVerified));
       error.statusCode = 401;
       throw error;
     }
