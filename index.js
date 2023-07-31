@@ -9,30 +9,26 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 const cors = require('cors');
 const RateLimit = require('express-rate-limit');
-
 require('dotenv').config()
 
+// key pair creation and rotation
 const { resetKeypair } = require('./utils/keypair');
-
 if (!fs.existsSync(path.join(__dirname, '.public', 'keys.json')) || !fs.existsSync(path.join(__dirname, '.private', 'keys.json'))){
   resetKeypair();
   console.info('key-pair generated');
 }
-
 const cronJob = cron.schedule("0 56 23 * * *", function() {
   resetKeypair();
   console.info('key-pair update job completed');
 });
 cronJob.start();
 
-const authRoutes = require('./routes/auth');
+// setup express with helmet, bodyparser, morgan, cors, and rate limit
 const app = express();
-
-app.use(express.json()); // application/json
-
+app.use(express.json());
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
-app.use(morgan("dev"));
+app.use(morgan("combined"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
@@ -43,17 +39,8 @@ const limiter = RateLimit({
 // Apply rate limiter to all requests
 app.use(limiter);
 
-
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader(
-    'Access-Control-Allow-Methods',
-    'OPTIONS, GET, POST, PUT, PATCH, DELETE'
-  );
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  next();
-});
-
+// Routes:
+const authRoutes = require('./routes/auth');
 app.use('/auth', authRoutes);
 
 app.use((error, req, res, next) => {
@@ -71,8 +58,8 @@ mongoose
     process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(result => {
-    console.log('Connected to Database!')
+    console.log('Connected to MongoDB Instance.')
     server.listen(process.env.API_PORT);
-    console.log('Server running on port '+process.env.API_PORT)
+    console.log('Server running on port: '+process.env.API_PORT)
   })
   .catch(err => console.log(err));
