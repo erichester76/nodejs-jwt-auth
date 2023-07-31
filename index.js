@@ -26,25 +26,34 @@ cronJob.start();
 // setup express with helmet, bodyparser, morgan, cors, and rate limit
 const app = express();
 app.use(express.json());
+
+// helmet for some level of WAF
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+
+// prevent fingerprinting
 app.disable('x-powered-by')
-app.use(morgan("combined"));
+app.set('trust proxy', 1)
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(cors());
+
+// rate limit failed requests at 50/minute per IP for brute force
 const limiter = RateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
   max: 50,
   skipSuccessfulRequests: true,
 });
-// Apply rate limiter to all requests
 app.use(limiter);
+
+// logging
+app.use(morgan("combined"));
 
 // Routes:
 const authRoutes = require('./routes/auth');
 app.use('/auth', authRoutes);
 
+// replace standard error responses to prevent fingerprinting
 app.use((error, req, res, next) => {
   console.log(error);
   const status = error.statusCode || 500;
