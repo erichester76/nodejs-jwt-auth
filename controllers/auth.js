@@ -134,13 +134,13 @@ exports.signInWithEmailPassword = async (req, res, next) => {
       throw error;
     }
 
-    const token = req.body.token;
-    const tokenValidationResult = await validateToken(token);
-    if (!tokenValidationResult) {
-      const error = new Error('Captcha Validation failed.');
-      error.statusCode = 422;
-      throw error;
-    }
+    //const token = req.body.token;
+    //const tokenValidationResult = await validateToken(token);
+    //if (!tokenValidationResult) {
+    //  const error = new Error('Captcha Validation failed.');
+    //  error.statusCode = 422;
+    //  throw error;
+    // }
     const email = req.body.email;
     const password = req.body.password;
 
