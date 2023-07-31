@@ -60,7 +60,7 @@ router.post(
   authController.signup
 );
 
-router.post('/sign_in_with_email_password', [
+router.post('/sign_in', [
   body('email')
     .notEmpty()
     .isEmail()
