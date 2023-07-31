@@ -30,10 +30,11 @@ app.use(express.json());
 // helmet for some level of WAF
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+app.use(cors());
 
 // prevent fingerprinting
 app.disable('x-powered-by')
-app.set('trust proxy', 1)
+app.set('trust proxy', 2)
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
