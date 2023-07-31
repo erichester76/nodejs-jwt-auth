@@ -31,6 +31,7 @@ app.use(helmet());
 
 var corsOptions = {
   origin: ['http://localhost:3000', 'https://dev.knowbyte.app'],
+  credentials: true,
 }
 
 app.use(cors(corsOptions));
