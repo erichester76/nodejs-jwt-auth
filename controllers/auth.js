@@ -161,7 +161,7 @@ exports.signInWithEmailPassword = async (req, res, next) => {
     }
 
     if (!user.emailVerified) {
-      const error = new Error('Email not verified, please verify on your email!');
+      const error = new Error('Email not verified, please verify your email!');
       error.statusCode = 401;
       throw error;
     }
@@ -355,7 +355,7 @@ exports.setupOtp = async (req, res, next) => {
       throw error;
     }
     if (!user.emailVerified) {
-      const error = new Error('Email not verified, please verify on your email!');
+      const error = new Error('Email not verified, please verify your email!');
       error.statusCode = 401;
       throw error;
     }
@@ -385,7 +385,7 @@ exports.disableOtp = async (req, res, next) => {
       throw error;
     }
     if (!user.emailVerified) {
-      const error = new Error('Email not verified, please verify on your email!');
+      const error = new Error('Email not verified, please verify your email!');
       error.statusCode = 401;
       throw error;
     }
@@ -411,7 +411,7 @@ exports.enable2FA = async (req, res, next) => {
       throw error;
     }
     if (!user.emailVerified) {
-      const error = new Error('Email not verified, please verify on your email!');
+      const error = new Error('Email not verified, please verify your email!');
       error.statusCode = 401;
       throw error;
     }
@@ -437,7 +437,7 @@ exports.disable2FA = async (req, res, next) => {
       throw error;
     }
     if (!user.emailVerified) {
-      const error = new Error('Email not verified, please verify on your email!');
+      const error = new Error('Email not verified, please verify your email!');
       error.statusCode = 401;
       throw error;
     }
@@ -473,7 +473,7 @@ exports.validateOtp = async (req, res, next) => {
       throw error;
     }
     if (!user.emailVerified) {
-      const error = new Error('Email not verified, please verify on your email!');
+      const error = new Error('Email not verified, please verify your email!');
       error.statusCode = 401;
       throw error;
     }
