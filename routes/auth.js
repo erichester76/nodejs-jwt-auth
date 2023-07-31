@@ -31,7 +31,7 @@ router.post(
   body('password')
     .trim()
     .isLength({
-      min: 5
+      min: 8
     }),
   body('firstName')
     .trim()
@@ -63,11 +63,14 @@ router.post(
 router.post('/sign_in_with_email_password', [
   body('email')
     .notEmpty()
-    .trim(),
+    .isEmail()
+    .withMessage('Please enter a valid email.')
+    .trim()    
+    .normalizeEmail(),
   body('password')
     .trim()
     .isLength({
-      min: 5
+      min: 8
     }),
 ], authController.signInWithEmailPassword, authController.handleSignIn);
 
