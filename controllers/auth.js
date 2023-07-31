@@ -134,19 +134,13 @@ exports.signInWithEmailPassword = async (req, res, next) => {
       throw error;
     }
 
-    //const token = req.body.token;
-    //const tokenValidationResult = await validateToken(token);
-    //if (!tokenValidationResult) {
-    //  const error = new Error('Captcha Validation failed.');
-    //  error.statusCode = 422;
-    //  throw error;
-    // }
     const email = req.body.email;
     const password = req.body.password;
 
     const user = await User.findOne({
       email: email
     });
+
     if (!user) {
       const error = new Error('Invalid Username or Password.');
       error.statusCode = 401;
@@ -161,7 +155,7 @@ exports.signInWithEmailPassword = async (req, res, next) => {
     }
 
     if (!user.emailVerified) {
-      const error = new Error('Email not verified, please verify your email! '.concat(user.emailVerified));
+      const error = new Error('Email not verified, please verify your email!');
       error.statusCode = 401;
       throw error;
     }
