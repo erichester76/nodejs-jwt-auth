@@ -29,8 +29,11 @@ app.use(express.json());
 
 // helmet for some level of WAF
 app.use(helmet());
-app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
-app.use(cors());
+const allowedOrigins = ['http://localhost:3000', 'https://dev.knowbyte.app'];
+const options: cors.CorsOptions = {
+  origin: allowedOrigins
+};
+app.use(cors(options));
 
 // prevent fingerprinting
 app.disable('x-powered-by')
